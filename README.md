@@ -5,7 +5,9 @@ Ideas:
         Req:
             Goove API
     Weather
-        Weather API
+        Req:
+            Weather API
+            Get Location
     Turn On/Off PC.
     Github Create New Repo
     Open Github Repo
