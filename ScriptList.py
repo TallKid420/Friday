@@ -1,0 +1,1 @@
+scripts = [r"D:\Friday\CREDS.py", r"D:\Friday\Start.py"]

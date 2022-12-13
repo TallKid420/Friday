@@ -1,6 +1,6 @@
 import geocoder
 import requests
-from CREDS import *
+from vars import *
 
 def GetLocation():
     g = geocoder.ip('me')
