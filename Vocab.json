@@ -1,0 +1,20 @@
+{
+    "weather": "weather",
+    "cloudy": "weather",
+    "sunny": "weather",
+    "rainy": "weather",
+    "stormy": "weather",
+    "windy": "weather",
+    "snowy": "weather",
+    "humid": "weather",
+    "dry": "weather",
+    "hot": "weather",
+    "cold": "weather",
+    "temperate": "weather",
+    "overcast": "weather",
+    "foggy": "weather",
+    "hazy": "weather",
+    "partly cloudy": "weather",
+    "clear": "weather"
+  }
+  

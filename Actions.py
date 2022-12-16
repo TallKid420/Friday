@@ -2,11 +2,9 @@ import geocoder
 import requests
 from vars import *
 
-def GetLocation():
+def GetWeather():
     g = geocoder.ip('me')
-    return(g.latlng)
-
-def GetWeather(latlng):
+    latlng = g.latlng
     lat = latlng[0]
     lng = latlng[1]
 
@@ -14,5 +12,3 @@ def GetWeather(latlng):
 
     response = requests.request("GET", url)
     return(response.text)
-
-print(GetWeather(GetLocation()))
