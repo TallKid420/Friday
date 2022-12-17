@@ -16,7 +16,7 @@ def get_input():
 def update_JSON():
     global JSONFILE
     with open("Vocab.json", "r") as jf:
-        JSONFILE = json.loads(str(jf.read()))
+        return json.loads(str(jf.read()))
 
 def Speak(text):
     tts = gTTS(text)
@@ -25,7 +25,7 @@ def Speak(text):
     pygame.mixer.music.load("speech.mp3")
     pygame.mixer.music.play()
     while pygame.mixer.music.get_busy():
-        continue
+        pass
     pygame.mixer.music.stop()
     pygame.quit()
     os.remove("speech.mp3")
