@@ -1,59 +1,28 @@
-import re
 import requests
 from bs4 import BeautifulSoup
-import nltk
-from nltk.corpus import stopwords
-from nltk.cluster.util import cosine_distance
-from sklearn.feature_extraction.text import CountVectorizer
-import numpy as np
-import networkx as nx
 
-def remove_non_text(input_string):
-  # Use a regular expression to match any character that is not a letter or a space
-  pattern = re.compile(r'[^a-zA-Z\s\.]')
-  # Replace all non-letter and non-space characters with an empty string
-  output_string = pattern.sub('', input_string)
-  return output_string
+def get_summary(query):
+  # Make a GET request to the Google search page
+  res = requests.get(f'https://www.google.com/search?q={query}')
 
-def summarize(text, question):
-    x=0
-    lq = question.split(' ')
-    for i in lq:
-        # logic to decide what it is asking
+  # Parse the HTML content of the page
+  soup = BeautifulSoup(res.text, 'html.parser')
 
-        # what is a () logic
-        if i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "an" or i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "a":
-            pattern = r'(.*\b(an '+lq[x+3]+r' is)\b.*)'
-            match = re.search(pattern, text.lower())
-            matches = re.findall(pattern, text.lower())
-            print(matches)
-        x=x+1
-            
+  # Find the first search result on the page
+  result = soup.find('div', class_='VwiC3b yXK7lf MUxGbd yDYNvb lyLwlc lEBKkf')
 
-def scrape_info(topic):
-    # Set up the list of websites to scrape
-    websites = [
-        "https://en.wikipedia.org/wiki/{}".format(topic)
-    ]
+  # Extract the URL of the page
+  url = result.find('a')['href']
 
-    # Initialize an empty list to store the results
-    results = []
+  # Make a GET request to the URL of the page
+  res = requests.get(url)
 
-    # Iterate over each website
-    for website in websites:
-        # Make a request to the website and retrieve the HTML content
-        html_doc = requests.get(website).text
-        # Parse the HTML using BeautifulSoup
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        # Extract the relevant information from the website
-        info = soup.get_text()
-        # Add the information to the list of results
-        results.extend(info)
-        results = ''.join(results)
-    # Return the list of results
-    return results
+  # Parse the HTML content of the page
+  soup = BeautifulSoup(res.text, 'html.parser')
 
-text = scrape_info("Apple")
-text = remove_non_text(text)
-summary = summarize(text, "what is an apple")
-print(summary)
+  # Extract the summary of the page
+  summary = soup.find('p').text
+
+  return summary
+
+get_summary("apples")

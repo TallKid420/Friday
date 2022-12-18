@@ -1,30 +1,28 @@
-import pygame, os, nltk, json, speech_recognition as sr, re, requests, nltk, numpy as np, networkx as nx
+import pygame, os, nltk, speech_recognition as sr, re, requests
 from Actions import *
 from gtts import gTTS
 from bs4 import BeautifulSoup
-from nltk.corpus import stopwords
-from nltk.cluster.util import cosine_distance
-from sklearn.feature_extraction.text import CountVectorizer
 
-
-JSONFILE = ""
+TextInp = True
 r = sr.Recognizer()
 mic = sr.Microphone()
 
+actions = {
+    "weather": GetWeather
+}
+
+
 def get_input():
+    if TextInp:
+        return input("Input: ")
     with mic as source:
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     transcription = r.recognize_google(audio)
     return transcription
 
-def update_JSON():
-    global JSONFILE
-    with open("Vocab.json", "r") as jf:
-        return json.loads(str(jf.read()))
-
 def Speak(text):
-    tts = gTTS(text)
+    tts = gTTS(str(text))
     tts.save("speech.mp3")
     pygame.init()
     pygame.mixer.music.load("speech.mp3")
@@ -43,23 +41,23 @@ def detect_subject(question):
         if token[1] == "NNP":
             return token[0], False
     for i in question.split():
-        for iI in JSONFILE:
+        for iI in actions:
             if i == iI:
                 subjects.append(iI)
     return subjects, True
 
 def choose_action(action):
-    if action.lower() == JSONFILE[action]:
-        weather = json.loads(GetWeather())
-        print(weather)
-        Speak("It is currently {}ing. The tempeture is {} degres Fahrenheit".format(str(weather["weather"][0]["main"]), str(int(round(((weather["main"]["temp"] - 32) * 5/9) / 4, 0)))))
+    if action.lower() in actions:
+        # Execute the function associated with the action
+        print(actions[action.lower()]())
     else:
-        Speak("There is no action for that. Please Email evannriley7@gmail.com to add it")
+        # Action is not recognized
+        print("Sorry, I don't know how to perform that action.")
 
 def scrape_info(topic):
     # Set up the list of websites to scrape
     websites = [
-        "https://en.wikipedia.org/wiki/{}".format(topic)
+        "https://www.google.com/search?q={}".format(topic)
     ]
 
     # Initialize an empty list to store the results
@@ -87,21 +85,48 @@ def remove_non_text(input_string):
   return output_string
 
 def summarize(text, question):
+    awnsered = False
     x=0
     lq = question.split(' ')
     for i in lq:
         # logic to decide what it is asking
 
         # what is a () logic
-        if i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "an" or i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "a":
+        if i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "an" and awnsered == False or i.lower() == "what" and lq[x+1] == "is" and lq[x+2] == "a" and awnsered == False:
+            awnsered = True
             pattern = r'(.*\b(an '+lq[x+3]+r' is)\b.*)'
             match = re.search(pattern, text.lower())
             matches = re.findall(pattern, text.lower())
-            print(matches)
+            if matches == []:
+                Speak("No info Found")
+            else:
+                Speak(matches[0])
+        elif i.lower() == "is" and lq[x+1] == "an" and awnsered == False or i.lower() == "is" and lq[x+1] == "a" and awnsered == False:
+            awnsered = True
+            pattern = r'(.*\b(an '+lq[x+2]+r' is)\b.*)'
+            match = re.search(pattern, text.lower())
+            matches = re.findall(pattern, text.lower())
+            if matches == []:
+                Speak("No info Found")
+            else:
+                Speak(matches[0])
         x=x+1
 
+def get_subject(question):
+  # Tokenize the question
+  tokens = nltk.word_tokenize(question)
+  # Perform POS tagging on the tokens
+  pos_tags = nltk.pos_tag(tokens)
+  # Iterate over the POS tags and find the first noun
+  for tag in pos_tags:
+    if tag[1] == 'NN':
+      return tag[0]
+  return None
+
+
 def fallback_response(question):
-    text = scrape_info("Apple")
+    print(question)
+    text = scrape_info(get_subject(question).upper())
     text = remove_non_text(text)
     summary = summarize(text, question)   
     print(summary)
@@ -109,7 +134,8 @@ def fallback_response(question):
 def Respond_To_Question(question):
     qs = detect_subject(question)
     if qs[1]:
-        if qs[0] == "":
+        print(qs[0])
+        if qs[0] == []:
             fallback_response(question)
         else:
             q = qs[0]
@@ -139,29 +165,32 @@ def Respond_To_Question(question):
             else:
                 choose_action(most_common_word)
     else:
-        for i in JSONFILE:
+        for i in actions:
             if i == qs:
                 choose_action(qs)
 
-update_JSON()
-while True:
-    # Listen for audio
-    with mic as source:
-        print("Listening")
-        r.adjust_for_ambient_noise(source)
-        audio = r.listen(source)
-    # Transcribe the audio to text
-    transcription = r.recognize_google(audio)
+if TextInp:
+    while True:
+        Respond_To_Question(input("Input: "))
+else:
+    while True:
+        # Listen for audio
+        with mic as source:
+            print("Listening")
+            r.adjust_for_ambient_noise(source)
+            audio = r.listen(source)
+        # Transcribe the audio to text
+        transcription = r.recognize_google(audio)
 
-    tr = transcription.split()
-    for i in tr:
-        if i.lower() == "friday":
-            Speak("yes?")
-            with mic as source:
-                r.adjust_for_ambient_noise(source)
-                audio = r.listen(source)
-            transcription = r.recognize_google(audio)
-            Respond_To_Question(transcription)
+        tr = transcription.split()
+        for i in tr:
+            if i.lower() == "friday":
+                Speak("yes?")
+                with mic as source:
+                    r.adjust_for_ambient_noise(source)
+                    audio = r.listen(source)
+                transcription = r.recognize_google(audio)
+                Respond_To_Question(transcription)
 
-    # Print the transcription
-    print(transcription)
+        # Print the transcription
+        print(transcription)
