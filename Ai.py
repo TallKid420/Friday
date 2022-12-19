@@ -2,6 +2,10 @@ import pygame, os, nltk, speech_recognition as sr, re, requests
 from Actions import *
 from gtts import gTTS
 from bs4 import BeautifulSoup
+from nltk.corpus import stopwords
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.stem import PorterStemmer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 TextInp = True
 r = sr.Recognizer()
@@ -11,6 +15,70 @@ actions = {
     "weather": GetWeather
 }
 
+def get_relevant_sentence(paragraph, topic):
+  # Tokenize the paragraph into sentences
+  sentences = sent_tokenize(paragraph)
+
+  # Convert the topic and sentences to lowercase
+  topic = topic.lower()
+  sentences = [sentence.lower() for sentence in sentences]
+
+  # Remove stopwords from the topic and sentences
+  stop_words = set(stopwords.words('english'))
+  topic_words = [word for word in word_tokenize(topic) if word not in stop_words]
+  sentences = [[word for word in word_tokenize(sentence) if word not in stop_words] for sentence in sentences]
+
+  # Stem the topic words
+  stemmer = PorterStemmer()
+  topic_words = [stemmer.stem(word) for word in topic_words]
+
+  # Stem the words in each sentence
+  sentences = [[stemmer.stem(word) for word in sentence] for sentence in sentences]
+
+  # Join the stemmed words in each sentence back into a single string
+  sentences = [' '.join(sentence) for sentence in sentences]
+
+  # Create a TfidfVectorizer and fit it to the stemmed sentences
+  vectorizer = TfidfVectorizer()
+  vectors = vectorizer.fit_transform(sentences)
+
+  # Get the Tfidf scores of the stemmed topic words
+  scores = vectorizer.transform([topic]).toarray()[0]
+
+  # Find the sentence with the highest Tfidf score for the topic words
+  max_index = scores.argmax()
+  if len(sentences) < max_index:
+    max_index = 1
+  else:
+    relevant_sentence = sentences[max_index]
+
+  # Return the relevant sentence in its original form (not lowercase and without stopwords)
+  return sent_tokenize(paragraph)[max_index]
+
+
+def remove_non_text(input_string):
+  # Use a regular expression to match any character that is not a letter or a space
+  pattern = re.compile(r'[^a-zA-Z\s\.]')
+  # Replace all non-letter and non-space characters with an empty string
+  output_string = pattern.sub('', input_string)
+  return output_string
+
+
+def get_summary(query):
+  # Make a GET request to the Google search page
+  res = requests.get(f'https://www.google.com/search?q={query}')
+
+  # Parse the HTML content of the page
+  soup = BeautifulSoup(res.text, 'html.parser')
+  # Find the first search result on the page
+  result = soup.find('div', id="main")
+
+  # Extract the description of the page
+  description = result.text
+  description = remove_non_text(description)
+  description = get_relevant_sentence(str(description), query)
+
+  return description
 
 def get_input():
     if TextInp:
@@ -49,40 +117,13 @@ def detect_subject(question):
 def choose_action(action):
     if action.lower() in actions:
         # Execute the function associated with the action
-        print(actions[action.lower()]())
+        Speak(actions[action.lower()]())
     else:
         # Action is not recognized
-        print("Sorry, I don't know how to perform that action.")
+        Speak("Sorry, I don't know how to perform that action.")
 
 def scrape_info(topic):
-    # Set up the list of websites to scrape
-    websites = [
-        "https://www.google.com/search?q={}".format(topic)
-    ]
-
-    # Initialize an empty list to store the results
-    results = []
-
-    # Iterate over each website
-    for website in websites:
-        # Make a request to the website and retrieve the HTML content
-        html_doc = requests.get(website).text
-        # Parse the HTML using BeautifulSoup
-        soup = BeautifulSoup(html_doc, 'html.parser')
-        # Extract the relevant information from the website
-        info = soup.get_text()
-        # Add the information to the list of results
-        results.extend(info)
-        results = ''.join(results)
-    # Return the list of results
-    return results
-
-def remove_non_text(input_string):
-  # Use a regular expression to match any character that is not a letter or a space
-  pattern = re.compile(r'[^a-zA-Z\s\.]')
-  # Replace all non-letter and non-space characters with an empty string
-  output_string = pattern.sub('', input_string)
-  return output_string
+    return(get_summary(topic))
 
 def summarize(text, question):
     awnsered = False
@@ -125,16 +166,13 @@ def get_subject(question):
 
 
 def fallback_response(question):
-    print(question)
-    text = scrape_info(get_subject(question).upper())
+    text = scrape_info(question)
     text = remove_non_text(text)
-    summary = summarize(text, question)   
-    print(summary)
+    Speak(text)
 
 def Respond_To_Question(question):
     qs = detect_subject(question)
     if qs[1]:
-        print(qs[0])
         if qs[0] == []:
             fallback_response(question)
         else:
