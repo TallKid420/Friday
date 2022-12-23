@@ -140,6 +140,7 @@ def summarize(text, question):
             matches = re.findall(pattern, text.lower())
             if matches == []:
                 Speak("No info Found")
+                return "No info Found"
             else:
                 Speak(matches[0])
         elif i.lower() == "is" and lq[x+1] == "an" and awnsered == False or i.lower() == "is" and lq[x+1] == "a" and awnsered == False:
@@ -169,12 +170,13 @@ def fallback_response(question):
     text = scrape_info(question)
     text = remove_non_text(text)
     Speak(text)
+    return text
 
 def Respond_To_Question(question):
     qs = detect_subject(question)
     if qs[1]:
         if qs[0] == []:
-            fallback_response(question)
+            return fallback_response(question)
         else:
             q = qs[0]
             word_counts = {}
@@ -207,28 +209,28 @@ def Respond_To_Question(question):
             if i == qs:
                 choose_action(qs)
 
-if TextInp:
-    while True:
-        Respond_To_Question(input("Input: "))
-else:
-    while True:
-        # Listen for audio
-        with mic as source:
-            print("Listening")
-            r.adjust_for_ambient_noise(source)
-            audio = r.listen(source)
-        # Transcribe the audio to text
-        transcription = r.recognize_google(audio)
+# if TextInp:
+#     while True:
+#         Respond_To_Question(input("Input: "))
+# else:
+#     while True:
+#         # Listen for audio
+#         with mic as source:
+#             print("Listening")
+#             r.adjust_for_ambient_noise(source)
+#             audio = r.listen(source)
+#         # Transcribe the audio to text
+#         transcription = r.recognize_google(audio)
 
-        tr = transcription.split()
-        for i in tr:
-            if i.lower() == "friday":
-                Speak("yes?")
-                with mic as source:
-                    r.adjust_for_ambient_noise(source)
-                    audio = r.listen(source)
-                transcription = r.recognize_google(audio)
-                Respond_To_Question(transcription)
+#         tr = transcription.split()
+#         for i in tr:
+#             if i.lower() == "friday":
+#                 Speak("yes?")
+#                 with mic as source:
+#                     r.adjust_for_ambient_noise(source)
+#                     audio = r.listen(source)
+#                 transcription = r.recognize_google(audio)
+#                 Respond_To_Question(transcription)
 
-        # Print the transcription
-        print(transcription)
+#         # Print the transcription
+#         print(transcription)
