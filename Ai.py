@@ -14,7 +14,10 @@ mic = sr.Microphone()
 actions = {
     "weather": GetWeather
 }
-
+#Face
+#Body
+#S
+#M
 def get_relevant_sentence(paragraph, topic):
   # Tokenize the paragraph into sentences
   sentences = sent_tokenize(paragraph)

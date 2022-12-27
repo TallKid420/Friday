@@ -1,0 +1,258 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>AI Language Model</title>
+    <style>
+      /* Add some styling to the page */
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3em;
+        color: #333;
+      }
+      p {
+        font-size: 1.5em;
+        color: #666;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        font-size: 1.2em;
+        color: #999;
+        margin-bottom: 0.5em;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .image {
+        display: block;
+        margin: 2em auto;
+        width: 50%;
+      }
+      .btn {
+        display: inline-block;
+        background-color: #333;
+        color: #fff;
+        padding: 0.5em 1em;
+        border-radius: 0.5em;
+        text-decoration: none;
+      }
+      .btn:hover {
+        background-color: #666;
+      }
+      .cta {
+        margin: 2em 0;
+      }
+
+      /* Add styling for the header bar */
+      .header {
+        background-color: #333;
+        color: #fff;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1em;
+      }
+      .header a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      /* Add additional styling for layout and appearance */
+      .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .feature-item {
+        width: 45%;
+        margin-bottom: 2em;
+      }
+      .feature-item h3 {
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 0.5em;
+      }
+      .feature-item p {
+        font-size: 1.2em;
+        color: #666;
+      }
+      body {
+        background-color: #d3d3d3;
+      } 
+
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="container">
+      <h1>AI Language Model</h1>
+      <p>Welcome to our AI language model! This powerful tool is capable of generating human-like text and responding to a wide range of inputs. It has been trained on a vast dataset of texts and can provide accurate and coherent responses to a variety of tasks.</p>
+      <img src="https://via.placeholder.com/800x400" alt="AI language model" class="image">
+      <p>Some of the features of our AI language model include:</p>
+      <ul>
+        <li>Text input and output</li>
+        <li>Speech input and output using the pygame, nltk, speech_recognition, and gTTS libraries</li>
+        <li>Summarization of search results from Google using the requests and BeautifulSoup libraries</li>
+        <li>Identification of relevant sentences in a paragraph using the nltk, sklearn, and TfidfVectorizer libraries</li>
+      </ul>
+      <div class="cta">
+        <a href="#" class="btn">Learn more</a>
+      </div>
+    </div>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Friday</title>
+  <style>
+/* Use an image as the background */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('image/pexels-athena-2582937.jpg'); /* Replace 'bg.jpg' with the file name of your image */
+  background-repeat: no-repeat;
+  background-position: center center; /* add this line to center the image */
+  color: #070707; /* Rich Black FOGRA 39 */
+}
+
+header {
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+  color: #ece5f0; /* Magnolia */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+header nav ul li {
+  margin: 0 10px;
+}
+
+header nav ul li a {
+  color: #ece5f0; /* Magnolia */
+  text-decoration: none;
+}
+
+main {
+  border-radius: 15px;
+  max-width: 800px;
+  max-height: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color:rgba(255, 255, 255, 0.3);
+  color: #070707; /* Rich Black FOGRA 39 */
+  align-self: baseline;
+}
+
+main:not(h2) {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+main h1 {
+  text-align: center;
+}
+
+footer {
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+  color: #ece5f0; /* Magnolia */
+  text-align: center;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.small-thin-bar {
+  height: 30px;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.small-thin-bar button {
+  background-color: #000;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  display: block;
+}
+
+.small-thin-bar button:hover {
+  text-decoration: underline;
+}
+
+/* Rotate the element by 45 degrees around its center */
+.rotated-element {
+  transform: rotate(-45deg);
+  display: inline-block; /* make the element an inline-block */
+  vertical-align: middle; /* align the element vertically with the text */
+  margin-left: 5px; /* add a left margin to the element */
+}
+  </style>
+</head>
+<body>
+  <div class="small-thin-bar">
+    <p>Introducing Friday research release</p>
+    <button>Try<span class="rotated-element">&#x2192;</span></button>
+    <button>Learn more<span class="rotated-element">&#x2192;</span></button>
+  </div>  
+  <header>
+    <h1>Friday</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Friday- An AI Language Model</h1>
+    <button style="border: 2px solid white; color: white; background-color: black; border-radius: 12.5px; font-size: 2em;">Try now</button>
+    <button style="border: 2px solid white; color: white; background-color: black; border-radius: 12.5px; font-size: 2em;">Learn more</button>
+    <!--<p>"Friday" is an artificial intelligence language model designed to perform various tasks through natural language processing and machine learning techniques. Some of the capabilities of Friday include accepting voice or text input, performing web searches, summarizing information from web pages, and providing information about the weather. Friday uses a combination of Python libraries and APIs, including Pygame, NLTK, and Google's Speech Recognition and Text-to-Speech APIs, to interact with users and perform its tasks. The source code for Friday includes functions for text preprocessing, feature extraction, and machine learning, as well as functions for interacting with users through audio and text output.</p> -->
+  </main>
+  <footer>
+    <p>Copyright 2021</p>
+  </footer>
+</body>
+</html>

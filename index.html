@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
   <title>AI Chat System</title>
   <style>
     /* Add CSS styles for the chat interface here */
@@ -95,18 +93,9 @@
     <input type="text" id="chat-input" placeholder="Type your message here">
     <button type="submit" id="chat-button">Send</button>
   </form>
-  <py-script>
-    from Ai import *
-    x=10
-    def main(message):
-        # Call the generate_response function from the external script
-        response = Respond_To_Question(message)
-        return response
-  </py-script>
   <script>
 // import com.sun.jna.Library;
 // import com.sun.jna.Native;
-//https://medium.com/swlh/run-python-script-from-node-js-and-send-data-to-browser-15677fcf199f
 const chatForm = document.getElementById('chat-form');
 const chatInput = document.getElementById('chat-input');
 const chatButton = document.getElementById('chat-button');
